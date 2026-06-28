@@ -230,12 +230,12 @@ namespace joyofsailing
             ForwardSpeed += (desiredSpeed - ForwardSpeed) * (double)dt;
 
 
-            EntityPos sidedPos = base.SidedPos;
+            EntityPos pos = base.Pos;
             if (ForwardSpeed != 0.0)
             {
-                Vec3d vec3d = sidedPos.GetViewVector().Mul((float)(0.0 - ForwardSpeed)).ToVec3d();
-                sidedPos.Motion.X = vec3d.X;
-                sidedPos.Motion.Z = vec3d.Z;
+                Vec3d vec3d = pos.GetViewVector().Mul((float)(0.0 - ForwardSpeed)).ToVec3d();
+                pos.Motion.X = vec3d.X;
+                pos.Motion.Z = vec3d.Z;
             }
 
             EntityBehaviorPassivePhysicsMultiBox behavior = GetBehavior<EntityBehaviorPassivePhysicsMultiBox>();
@@ -243,9 +243,9 @@ namespace joyofsailing
             if (AngularVelocity != 0.0)
             {
                 float num = (float)AngularVelocity * dt * 30f;
-                if (behavior.AdjustCollisionBoxesToYaw(dt, push: true, base.SidedPos.Yaw + num))
+                if (behavior.AdjustCollisionBoxesToYaw(dt, push: true, base.Pos.Yaw + num))
                 {
-                    sidedPos.Yaw += num;
+                    pos.Yaw += num;
                 }
                 else
                 {
@@ -254,22 +254,22 @@ namespace joyofsailing
             }
             else
             {
-                flag = behavior.AdjustCollisionBoxesToYaw(dt, push: true, base.SidedPos.Yaw);
+                flag = behavior.AdjustCollisionBoxesToYaw(dt, push: true, base.Pos.Yaw);
             }
 
             if (!flag)
             {
-                if (behavior.AdjustCollisionBoxesToYaw(dt, push: true, base.SidedPos.Yaw - 0.1f))
+                if (behavior.AdjustCollisionBoxesToYaw(dt, push: true, base.Pos.Yaw - 0.1f))
                 {
-                    sidedPos.Yaw -= 0.0002f;
+                    pos.Yaw -= 0.0002f;
                 }
-                else if (behavior.AdjustCollisionBoxesToYaw(dt, push: true, base.SidedPos.Yaw + 0.1f))
+                else if (behavior.AdjustCollisionBoxesToYaw(dt, push: true, base.Pos.Yaw + 0.1f))
                 {
-                    sidedPos.Yaw += 0.0002f;
+                    pos.Yaw += 0.0002f;
                 }
             }
 
-            sidedPos.Roll = 0f;
+            pos.Roll = 0f;
 
             if (controlsVec != Vec3d.Zero)
             {
@@ -300,7 +300,7 @@ namespace joyofsailing
 
                 if (!(entityBoatSeat.Passenger is EntityPlayer))
                 {
-                    entityBoatSeat.Passenger.SidedPos.Yaw = base.SidedPos.Yaw;
+                    entityBoatSeat.Passenger.Pos.Yaw = base.Pos.Yaw;
                 }
 
                 if (entityBoatSeat.Config.BodyYawLimit.HasValue)
@@ -431,9 +431,9 @@ namespace joyofsailing
 
         public void updateWind()
         {
-            Vec3d windVector = World.BlockAccessor.GetWindSpeedAt(SidedPos.XYZ).Clone();
+            Vec3d windVector = World.BlockAccessor.GetWindSpeedAt(Pos.XYZ).Clone();
             windAngle = Math.Atan2(windVector.Normalize().Z, windVector.Normalize().X) * GameMath.RAD2DEG - 90f;
-            windSpeed = World.BlockAccessor.GetWindSpeedAt(SidedPos.XYZ).Length();
+            windSpeed = World.BlockAccessor.GetWindSpeedAt(Pos.XYZ).Length();
 
             //windSpeed = Math.Max(SailboatConfig.Current.minSpeed, windSpeed); // WIND MIN SPEED : A RETIRER SI CA MARCHE PAS
         }

@@ -31,18 +31,14 @@ namespace joyofsailing
 
         public override void OnGameTick(float dt)
         {
-            if (this.blocks == null || this.SidedPos == null) return;
+            if (this.blocks == null || this.Pos == null) return;
             base.OnGameTick(dt);
             // Ship test simulation - test motion
-            this.SidedPos.Motion.X = 0.01;
+            this.Pos.Motion.X = 0.01;
             Pos.Y = (int)Pos.Y + 0.5;
             Pos.Yaw = (float)(Pos.X % 6.3) / 20;
             Pos.Pitch = (float)GameMath.Sin(Pos.X % 6.3) / 5;
             Pos.Roll = (float)GameMath.Sin(Pos.X % 12.6) / 3;
-            SidedPos.Pitch = Pos.Pitch;
-            SidedPos.Roll = Pos.Roll;
-            SidedPos.Y = Pos.Y;
-            ServerPos.SetFrom(Pos);
         }
     }
 }
